@@ -29,14 +29,15 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
   
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-3">
-              <Button 
-                size="xl" 
-                onClick={onStart}
-                className="bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-x hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.5)] transition-all duration-500 scale-105 hover:scale-110"
-              >
-                Start Your Assessment
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+                <Button 
+                  size="xl" 
+                  onClick={onStart}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_hsl(var(--primary))] transition-all duration-500 scale-105 hover:scale-110 font-bold"
+                >
+                  Start Your Assessment
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+
               <Button variant="outline" size="xl">
                 View the Science
               </Button>
