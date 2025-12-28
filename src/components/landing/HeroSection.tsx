@@ -27,16 +27,20 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
             ATHENAFIT analyzes your daily readiness to recommend the safest, most effective action—training, recovery, or rest—preventing burnout before it begins.
           </p>
   
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-3">
-            <Button size="xl" onClick={onStart}>
-              Start Your Assessment
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="xl">
-              View the Science
-            </Button>
-          </div>
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-3">
+              <Button 
+                size="xl" 
+                onClick={onStart}
+                className="bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-x hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.5)] transition-all duration-500 scale-105 hover:scale-110"
+              >
+                Start Your Assessment
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="xl">
+                View the Science
+              </Button>
+            </div>
 
 
           {/* Trust indicator */}
