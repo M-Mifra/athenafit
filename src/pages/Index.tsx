@@ -9,10 +9,11 @@ import ScienceSection from "@/components/landing/ScienceSection";
 import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
 import QuickCheckIn from "@/components/dashboard/QuickCheckIn";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ReadinessResult } from "@/lib/readinessEngine";
 
 const Index = () => {
-  const [assessmentResult, setAssessmentResult] = useState<any>(null);
+  const [assessmentResult, setAssessmentResult] = useState<ReadinessResult | null>(null);
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
 
   return (
