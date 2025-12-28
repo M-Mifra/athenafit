@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Loader2, History, RefreshCw, BookOpen, Microscope, BrainCircuit, Activity, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowLeft, Send, Loader2, History, RefreshCw, BookOpen, Activity, Sparkles, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import BiologicalCheckIn, { BiologicalData } from "@/components/dashboard/BiologicalCheckIn";
