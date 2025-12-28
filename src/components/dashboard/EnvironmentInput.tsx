@@ -17,29 +17,11 @@ export interface EnvironmentData {
 interface EnvironmentInputProps {
   onSubmit: (data: EnvironmentData) => void;
   loading?: boolean;
-  data?: EnvironmentData;
-  setData?: React.Dispatch<React.SetStateAction<EnvironmentData>>;
+  data: EnvironmentData;
+  setData: React.Dispatch<React.SetStateAction<EnvironmentData>>;
 }
 
 const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInputProps) => {
-  const [localAqi, setLocalAqi] = useState(data?.aqi ?? 50);
-  const [localTemperature, setLocalTemperature] = useState(data?.temperature_celsius ?? 22);
-  const [localIsHeatwave, setLocalIsHeatwave] = useState(data?.is_heatwave ?? false);
-  const [localLockdownStatus, setLocalLockdownStatus] = useState<"none" | "partial" | "full">(data?.lockdown_status ?? "none");
-  const [localHasLocalEvent, setLocalHasLocalEvent] = useState(data?.has_local_event ?? false);
-
-  useEffect(() => {
-    if (setData) {
-      setData({
-        aqi: localAqi,
-        temperature_celsius: localTemperature,
-        is_heatwave: localIsHeatwave,
-        lockdown_status: localLockdownStatus,
-        has_local_event: localHasLocalEvent,
-      });
-    }
-  }, [localAqi, localTemperature, localIsHeatwave, localLockdownStatus, localHasLocalEvent, setData]);
-
   const getAqiColor = (value: number) => {
     if (value <= 50) return "text-green-500";
     if (value <= 100) return "text-yellow-500";
@@ -65,14 +47,12 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
     return "text-red-500";
   };
 
+  const updateField = <K extends keyof EnvironmentData>(key: K, value: EnvironmentData[K]) => {
+    setData(prev => ({ ...prev, [key]: value }));
+  };
+
   const handleSubmit = () => {
-    onSubmit({
-      aqi: localAqi,
-      temperature_celsius: localTemperature,
-      is_heatwave: localIsHeatwave,
-      lockdown_status: localLockdownStatus,
-      has_local_event: localHasLocalEvent,
-    });
+    onSubmit(data);
   };
 
   return (
@@ -94,19 +74,19 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
               <Wind className="h-4 w-4 text-muted-foreground" />
               Air Quality Index (AQI)
             </Label>
-            <span className={`font-mono text-lg font-bold ${getAqiColor(localAqi)}`}>
-              {localAqi}
+            <span className={`font-mono text-lg font-bold ${getAqiColor(data.aqi)}`}>
+              {data.aqi}
             </span>
           </div>
           <Slider
-            value={[localAqi]}
-            onValueChange={(v) => setLocalAqi(v[0])}
+            value={[data.aqi]}
+            onValueChange={(v) => updateField("aqi", v[0])}
             max={500}
             min={0}
             step={5}
             className="cursor-pointer"
           />
-          <p className={`text-xs ${getAqiColor(localAqi)}`}>{getAqiLabel(localAqi)}</p>
+          <p className={`text-xs ${getAqiColor(data.aqi)}`}>{getAqiLabel(data.aqi)}</p>
         </div>
 
         <div className="space-y-3">
@@ -115,13 +95,13 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
               <Thermometer className="h-4 w-4 text-muted-foreground" />
               Temperature
             </Label>
-            <span className={`font-mono text-lg font-bold ${getTempColor(localTemperature)}`}>
-              {localTemperature}°C
+            <span className={`font-mono text-lg font-bold ${getTempColor(data.temperature_celsius)}`}>
+              {data.temperature_celsius}°C
             </span>
           </div>
           <Slider
-            value={[localTemperature]}
-            onValueChange={(v) => setLocalTemperature(v[0])}
+            value={[data.temperature_celsius]}
+            onValueChange={(v) => updateField("temperature_celsius", v[0])}
             max={50}
             min={-10}
             step={1}
@@ -135,8 +115,8 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
             Heatwave Alert
           </Label>
           <Switch
-            checked={localIsHeatwave}
-            onCheckedChange={setLocalIsHeatwave}
+            checked={data.is_heatwave}
+            onCheckedChange={(v) => updateField("is_heatwave", v)}
           />
         </div>
 
@@ -145,7 +125,7 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
             <Lock className="h-4 w-4 text-muted-foreground" />
             Movement Restrictions
           </Label>
-          <Select value={localLockdownStatus} onValueChange={(v: "none" | "partial" | "full") => setLocalLockdownStatus(v)}>
+          <Select value={data.lockdown_status} onValueChange={(v: "none" | "partial" | "full") => updateField("lockdown_status", v)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select restriction level" />
             </SelectTrigger>
@@ -163,8 +143,8 @@ const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInput
             Local Event (crowd/safety concern)
           </Label>
           <Switch
-            checked={localHasLocalEvent}
-            onCheckedChange={setLocalHasLocalEvent}
+            checked={data.has_local_event}
+            onCheckedChange={(v) => updateField("has_local_event", v)}
           />
         </div>
       </div>
