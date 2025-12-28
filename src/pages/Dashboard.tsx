@@ -6,13 +6,12 @@ import { toast } from "sonner";
 import BiologicalCheckIn, { BiologicalData } from "@/components/dashboard/BiologicalCheckIn";
 import EnvironmentInput from "@/components/dashboard/EnvironmentInput";
 import WorkoutRecommendation from "@/components/dashboard/WorkoutRecommendation";
-import { api, CombinedReadinessResponse, EnvironmentInput as EnvironmentInputType } from "@/lib/api";
-import { calculateReadiness } from "@/lib/readinessEngine";
+import { getCombinedReadiness, CombinedResult, EnvironmentInput as EnvironmentInputType } from "@/lib/readinessEngine";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<CombinedReadinessResponse | null>(null);
+  const [result, setResult] = useState<CombinedResult | null>(null);
   
   const [bioData, setBioData] = useState({
     sleep: 4,
@@ -22,15 +21,7 @@ const Dashboard = () => {
     timeAvailable: 3,
   });
 
-  const [biologicalApiData, setBiologicalApiData] = useState<BiologicalData>({
-    sleep_hours: 8.5,
-    stress_level: 5,
-    fatigue_level: 5,
-    muscle_soreness: 7,
-    available_time: 45,
-  });
-
-  const [envData, setEnvData] = useState<Omit<EnvironmentInputType, "user_id">>({
+  const [envData, setEnvData] = useState<EnvironmentInputType>({
     aqi: 50,
     temperature_celsius: 22,
     is_heatwave: false,
@@ -39,63 +30,25 @@ const Dashboard = () => {
   });
 
   const handleBiologicalChange = (data: BiologicalData) => {
-    setBiologicalApiData(data);
   };
 
   const handleEnvironmentSubmit = (data: Omit<EnvironmentInputType, "user_id">) => {
-    setEnvData(data);
+    setEnvData(data as EnvironmentInputType);
     toast.success("Environment conditions updated");
   };
 
   const handleGenerateRecommendation = async () => {
     setLoading(true);
     
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
     try {
-      const combinedData = {
-        user_id: 1,
-        ...biologicalApiData,
-        ...envData,
-      };
-
-      const response = await api.getCombinedReadiness(combinedData);
-      setResult(response);
+      const combinedResult = getCombinedReadiness(bioData, envData);
+      setResult(combinedResult);
       toast.success("Recommendation generated successfully!");
     } catch (error) {
-      console.warn("Backend unavailable, using local fallback:", error);
-      
-      const localResult = calculateReadiness({
-        sleep: bioData.sleep,
-        energy: bioData.energy,
-        stress: bioData.stress,
-        soreness: bioData.soreness,
-        timeAvailable: bioData.timeAvailable,
-      });
-      
-      const mockResponse: CombinedReadinessResponse = {
-        readiness_score: localResult.readiness_score,
-        base_decision: localResult.decision as "TRAIN" | "ACTIVE_RECOVERY" | "REST",
-        final_decision: localResult.decision as "TRAIN" | "ACTIVE_RECOVERY" | "REST",
-        readiness_explanation: localResult.explanation,
-        environment_adjustments: envData.aqi > 150 ? [{
-          rule_id: "AQI_001",
-          trigger: `AQI = ${envData.aqi}`,
-          action: "Reduce outdoor activity",
-          reason: `Air quality is poor (AQI ${envData.aqi}). Consider indoor alternatives.`
-        }] : [],
-        constraints: {
-          allow_outdoor: envData.aqi <= 150 && !envData.is_heatwave,
-          max_intensity_percent: envData.is_heatwave ? 60 : (envData.aqi > 100 ? 70 : 100),
-          max_duration_minutes: envData.is_heatwave ? 30 : 90,
-          recommended_location: envData.lockdown_status === "full" ? "home" : (envData.aqi > 150 ? "indoor" : "any"),
-          blocked_workout_types: envData.aqi > 200 ? ["running", "cycling", "outdoor cardio"] : [],
-          suggested_workout_types: envData.lockdown_status === "full" ? ["yoga", "bodyweight", "stretching"] : ["strength", "cardio", "flexibility"],
-        },
-        environment_severity: envData.aqi > 200 || envData.lockdown_status === "full" ? "critical" : 
-                              (envData.aqi > 100 || envData.is_heatwave ? "moderate" : "low"),
-      };
-      
-      setResult(mockResponse);
-      toast.info("Using local engine (backend offline)");
+      console.error("Error calculating readiness:", error);
+      toast.error("Failed to generate recommendation");
     } finally {
       setLoading(false);
     }
@@ -117,6 +70,7 @@ const Dashboard = () => {
       lockdown_status: "none",
       has_local_event: false,
     });
+    toast.info("Assessment reset");
   };
 
   return (
