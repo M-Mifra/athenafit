@@ -1,6 +1,7 @@
 import json
 import os
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 import redis
@@ -11,6 +12,15 @@ from . import models, schemas, engine, database
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="AI Exercise Personalization System")
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Redis setup
 redis_client = redis.Redis(
