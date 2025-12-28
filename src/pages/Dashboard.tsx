@@ -168,6 +168,8 @@ const Dashboard = () => {
                 <EnvironmentInput 
                   onSubmit={handleEnvironmentSubmit}
                   loading={false}
+                  data={envData}
+                  setData={setEnvData}
                 />
 
                 <Button
