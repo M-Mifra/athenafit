@@ -32,7 +32,7 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
   ];
 
   return (
-    <section className="section-padding subtle-gradient">
+    <section id="assessment" className="section-padding subtle-gradient relative">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Content */}
