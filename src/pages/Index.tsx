@@ -18,14 +18,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <main>
-        <HeroSection onStart={() => setIsCheckInOpen(true)} />
-        <ReadinessVisual assessment={assessmentResult} />
-        <AdaptiveRecommendations assessment={assessmentResult} />
-        <PopulationInsights />
-        <ScienceSection />
-        <CTASection />
-      </main>
+        <main>
+          <HeroSection onStart={() => setIsCheckInOpen(true)} />
+          <ReadinessVisual assessment={assessmentResult} />
+          <TemporalAdaptability />
+          <AdaptiveRecommendations assessment={assessmentResult} />
+          <PopulationInsights />
+          <ScienceSection />
+          <CTASection />
+        </main>
+
       <Footer />
 
       <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
