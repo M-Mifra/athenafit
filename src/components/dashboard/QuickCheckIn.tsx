@@ -28,7 +28,7 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
     timeAvailable: 3,
   });
 
-    const handleSubmit = async () => {
+  const handleSubmit = async () => {
     setLoading(true);
     
     try {
@@ -62,7 +62,6 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
       toast.success("Biological readiness synchronized!");
     } catch (error) {
       console.warn(error);
-      // Fallback to local engine if backend fails
       const result = calculateReadiness(data);
       setIsSubmitted(true);
       if (onResult) {
@@ -74,38 +73,37 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
     }
   };
 
-
   if (isSubmitted) {
     return (
-      <div className="bg-gradient-to-br from-primary/10 via-background to-accent/10 rounded-3xl p-12 text-center animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl">
-        <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-success to-primary flex items-center justify-center mb-6 shadow-[0_0_40px_-10px_rgba(var(--success),0.5)]">
-          <Check className="h-10 w-10 text-white" />
+      <div className="bg-gradient-to-br from-primary/20 via-background to-accent/20 rounded-3xl p-12 text-center animate-fade-up border border-primary/20 shadow-[0_0_50px_-12px_rgba(var(--primary),0.3)] backdrop-blur-2xl">
+        <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-success to-primary flex items-center justify-center mb-8 shadow-[0_0_40px_-10px_rgba(var(--success),0.5)] animate-pulse">
+          <Check className="h-12 w-12 text-white" />
         </div>
-        <h3 className="font-serif text-3xl font-bold mb-4">Assessment Complete</h3>
-        <p className="text-muted-foreground max-w-xs mx-auto text-lg">
-          Your biological readiness has been analyzed. Generating your optimal training path...
+        <h3 className="font-serif text-4xl font-bold mb-4 text-foreground">Synthesis Complete</h3>
+        <p className="text-muted-foreground max-w-xs mx-auto text-lg leading-relaxed">
+          Your biometrics have been processed. Your adaptive training strategy is ready.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-br from-background via-background to-primary/5 rounded-3xl p-8 animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
+    <div className="bg-gradient-to-br from-background via-background/80 to-primary/10 rounded-3xl p-8 animate-fade-up border border-white/20 shadow-[0_0_80px_-15px_rgba(var(--primary),0.2)] backdrop-blur-3xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -z-10 animate-pulse" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/20 rounded-full blur-[100px] -z-10 animate-pulse" />
 
-      <div className="relative">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/20">
-            <Sparkles className="h-6 w-6 animate-pulse" />
+      <div className="relative z-10">
+        <div className="flex items-center gap-5 mb-10">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-primary to-accent text-white shadow-[0_8px_30px_-10px_rgba(var(--primary),0.5)]">
+            <Sparkles className="h-7 w-7 animate-spin-slow" />
           </div>
           <div>
-            <h3 className="font-serif text-2xl font-bold tracking-tight">Daily Biological Check-in</h3>
-            <p className="text-sm text-muted-foreground font-medium">Calibrate your training to your current state</p>
+            <h3 className="font-serif text-3xl font-bold tracking-tight text-foreground">Biological Check-in</h3>
+            <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest mt-1">Calibrate Your Output</p>
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           <CheckInSlider
             icon={Moon}
             label="Sleep Quality"
@@ -146,25 +144,29 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
           />
         </div>
 
-        <div className="mt-10">
+        <div className="mt-12">
           <Button 
             variant="hero" 
-            className="w-full h-14 text-lg font-bold shadow-xl shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:scale-[1.02] transition-transform"
+            className="w-full h-16 text-xl font-bold shadow-2xl shadow-primary/30 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-x hover:scale-[1.02] active:scale-95 transition-all rounded-2xl border-none text-white"
             onClick={handleSubmit}
             disabled={loading}
           >
             {loading ? (
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="h-7 w-7 animate-spin" />
             ) : (
-              <>
-                Generate Personalized Strategy
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </>
+              <div className="flex items-center gap-2">
+                Generate Performance Strategy
+                <ChevronRight className="h-6 w-6" />
+              </div>
             )}
           </Button>
-          <p className="text-[10px] text-center text-muted-foreground mt-4 uppercase tracking-widest font-bold">
-            Powered by AthenaFit Intelligence Engine
-          </p>
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <div className="h-px w-8 bg-border" />
+            <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.2em] font-bold">
+              Neural Network Analysis Active
+            </p>
+            <div className="h-px w-8 bg-border" />
+          </div>
         </div>
       </div>
     </div>
