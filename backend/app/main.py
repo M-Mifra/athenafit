@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="AI Exercise Personalization System")
 
-# Configure CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,9 +12,9 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def root():
-    return {"message": "Exercise Personalization API is running"}
+def read_root():
+    return {"status": "online", "message": "Exercise Personalization API"}
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
