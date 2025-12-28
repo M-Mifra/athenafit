@@ -61,30 +61,38 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden border-t border-border bg-background">
-          <div className="container py-6 space-y-4">
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="block text-lg text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item}
-              </a>
-            ))}
-            <div className="pt-4 space-y-3">
-              <Button variant="outline" className="w-full">
-                Sign in
-              </Button>
-              <Button className="w-full">
-                Get Started
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+        {isOpen && (
+          <div className="md:hidden border-t border-border bg-background">
+            <div className="container py-6 space-y-4">
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => {
+                    if (item.href.startsWith("/")) {
+                      e.preventDefault();
+                      navigate(item.href);
+                      setIsOpen(false);
+                    }
+                  }}
+                  className="block text-lg text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <div className="pt-4 space-y-3">
+                <Button variant="outline" className="w-full" onClick={() => { navigate("/dashboard"); setIsOpen(false); }}>
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+                <Button className="w-full" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
+                  Get Started
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </header>
   );
 };
