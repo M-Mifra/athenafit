@@ -1,10 +1,10 @@
 import { Activity, MapPin, Clock, TrendingDown, AlertCircle, CheckCircle, Home, Sun } from "lucide-react";
-import { CombinedReadinessResponse, WorkoutConstraints, EnvironmentAdjustment } from "@/lib/api";
+import { CombinedResult, WorkoutConstraints, EnvironmentAdjustment } from "@/lib/readinessEngine";
 import { Progress } from "@/components/ui/progress";
 import StrategyInsights from "./StrategyInsights";
 
 interface WorkoutRecommendationProps {
-  result: CombinedReadinessResponse | null;
+  result: CombinedResult | null;
 }
 
 const WorkoutRecommendation = ({ result }: WorkoutRecommendationProps) => {
@@ -207,7 +207,8 @@ const WorkoutRecommendation = ({ result }: WorkoutRecommendationProps) => {
 
       <StrategyInsights 
         decision={result.final_decision} 
-        score={result.readiness_score} 
+        score={result.readiness_score}
+        constraints={result.constraints}
       />
     </div>
   );
