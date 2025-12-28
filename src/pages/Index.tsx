@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "@/components/landing/Navigation";
 import HeroSection from "@/components/landing/HeroSection";
 import ReadinessVisual from "@/components/landing/ReadinessVisual";
+import TemporalAdaptability from "@/components/landing/TemporalAdaptability";
 import AdaptiveRecommendations from "@/components/landing/AdaptiveRecommendations";
 import PopulationInsights from "@/components/landing/PopulationInsights";
 import ScienceSection from "@/components/landing/ScienceSection";
