@@ -1,39 +1,50 @@
 import { useState } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const navItems = ["Platform", "Science", "For Organizations", "Insights"];
+  const navItems = [
+    { label: "Platform", href: "#" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Science", href: "#science" },
+    { label: "Insights", href: "#" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <nav className="container flex h-16 items-center justify-between">
-        {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
           <span className="font-serif text-xl tracking-tight">ATHENAFIT</span>
         </a>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
             <a
-              key={item}
-              href="#"
+              key={item.label}
+              href={item.href}
+              onClick={(e) => {
+                if (item.href.startsWith("/")) {
+                  e.preventDefault();
+                  navigate(item.href);
+                }
+              }}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 line-reveal"
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </div>
 
-        {/* CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => window.location.href = "/auth"}>
-            Sign in
+          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard")} className="gap-2">
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            Dashboard
           </Button>
-          <Button size="sm" onClick={() => window.location.href = "/auth"}>
+          <Button size="sm" onClick={() => navigate("/auth")}>
             Get Started
             <ArrowRight className="h-3.5 w-3.5" />
           </Button>
