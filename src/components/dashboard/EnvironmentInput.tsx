@@ -1,23 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Wind, Thermometer, AlertTriangle, Lock, Calendar, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { EnvironmentInput as EnvironmentInputType } from "@/lib/api";
 
-interface EnvironmentInputProps {
-  onSubmit: (data: Omit<EnvironmentInputType, "user_id">) => void;
-  loading?: boolean;
+export interface EnvironmentData {
+  aqi: number;
+  temperature_celsius: number;
+  is_heatwave: boolean;
+  lockdown_status: "none" | "partial" | "full";
+  has_local_event: boolean;
 }
 
-const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
-  const [aqi, setAqi] = useState(50);
-  const [temperature, setTemperature] = useState(22);
-  const [isHeatwave, setIsHeatwave] = useState(false);
-  const [lockdownStatus, setLockdownStatus] = useState<"none" | "partial" | "full">("none");
-  const [hasLocalEvent, setHasLocalEvent] = useState(false);
+interface EnvironmentInputProps {
+  onSubmit: (data: EnvironmentData) => void;
+  loading?: boolean;
+  data?: EnvironmentData;
+  setData?: React.Dispatch<React.SetStateAction<EnvironmentData>>;
+}
+
+const EnvironmentInput = ({ onSubmit, loading, data, setData }: EnvironmentInputProps) => {
+  const [localAqi, setLocalAqi] = useState(data?.aqi ?? 50);
+  const [localTemperature, setLocalTemperature] = useState(data?.temperature_celsius ?? 22);
+  const [localIsHeatwave, setLocalIsHeatwave] = useState(data?.is_heatwave ?? false);
+  const [localLockdownStatus, setLocalLockdownStatus] = useState<"none" | "partial" | "full">(data?.lockdown_status ?? "none");
+  const [localHasLocalEvent, setLocalHasLocalEvent] = useState(data?.has_local_event ?? false);
+
+  useEffect(() => {
+    if (setData) {
+      setData({
+        aqi: localAqi,
+        temperature_celsius: localTemperature,
+        is_heatwave: localIsHeatwave,
+        lockdown_status: localLockdownStatus,
+        has_local_event: localHasLocalEvent,
+      });
+    }
+  }, [localAqi, localTemperature, localIsHeatwave, localLockdownStatus, localHasLocalEvent, setData]);
 
   const getAqiColor = (value: number) => {
     if (value <= 50) return "text-green-500";
@@ -46,11 +67,11 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
 
   const handleSubmit = () => {
     onSubmit({
-      aqi,
-      temperature_celsius: temperature,
-      is_heatwave: isHeatwave,
-      lockdown_status: lockdownStatus,
-      has_local_event: hasLocalEvent,
+      aqi: localAqi,
+      temperature_celsius: localTemperature,
+      is_heatwave: localIsHeatwave,
+      lockdown_status: localLockdownStatus,
+      has_local_event: localHasLocalEvent,
     });
   };
 
@@ -73,19 +94,19 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
               <Wind className="h-4 w-4 text-muted-foreground" />
               Air Quality Index (AQI)
             </Label>
-            <span className={`font-mono text-lg font-bold ${getAqiColor(aqi)}`}>
-              {aqi}
+            <span className={`font-mono text-lg font-bold ${getAqiColor(localAqi)}`}>
+              {localAqi}
             </span>
           </div>
           <Slider
-            value={[aqi]}
-            onValueChange={(v) => setAqi(v[0])}
+            value={[localAqi]}
+            onValueChange={(v) => setLocalAqi(v[0])}
             max={500}
             min={0}
             step={5}
             className="cursor-pointer"
           />
-          <p className={`text-xs ${getAqiColor(aqi)}`}>{getAqiLabel(aqi)}</p>
+          <p className={`text-xs ${getAqiColor(localAqi)}`}>{getAqiLabel(localAqi)}</p>
         </div>
 
         <div className="space-y-3">
@@ -94,13 +115,13 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
               <Thermometer className="h-4 w-4 text-muted-foreground" />
               Temperature
             </Label>
-            <span className={`font-mono text-lg font-bold ${getTempColor(temperature)}`}>
-              {temperature}°C
+            <span className={`font-mono text-lg font-bold ${getTempColor(localTemperature)}`}>
+              {localTemperature}°C
             </span>
           </div>
           <Slider
-            value={[temperature]}
-            onValueChange={(v) => setTemperature(v[0])}
+            value={[localTemperature]}
+            onValueChange={(v) => setLocalTemperature(v[0])}
             max={50}
             min={-10}
             step={1}
@@ -114,8 +135,8 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
             Heatwave Alert
           </Label>
           <Switch
-            checked={isHeatwave}
-            onCheckedChange={setIsHeatwave}
+            checked={localIsHeatwave}
+            onCheckedChange={setLocalIsHeatwave}
           />
         </div>
 
@@ -124,7 +145,7 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
             <Lock className="h-4 w-4 text-muted-foreground" />
             Movement Restrictions
           </Label>
-          <Select value={lockdownStatus} onValueChange={(v: "none" | "partial" | "full") => setLockdownStatus(v)}>
+          <Select value={localLockdownStatus} onValueChange={(v: "none" | "partial" | "full") => setLocalLockdownStatus(v)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select restriction level" />
             </SelectTrigger>
@@ -142,8 +163,8 @@ const EnvironmentInput = ({ onSubmit, loading }: EnvironmentInputProps) => {
             Local Event (crowd/safety concern)
           </Label>
           <Switch
-            checked={hasLocalEvent}
-            onCheckedChange={setHasLocalEvent}
+            checked={localHasLocalEvent}
+            onCheckedChange={setLocalHasLocalEvent}
           />
         </div>
       </div>
