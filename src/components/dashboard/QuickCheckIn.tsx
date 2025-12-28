@@ -28,22 +28,52 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
     timeAvailable: 3,
   });
 
-  const handleSubmit = async () => {
+    const handleSubmit = async () => {
     setLoading(true);
     
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    const result = calculateReadiness(data);
-    
-    setIsSubmitted(true);
-    
-    if (onResult) {
-      onResult(result);
+    try {
+      const payload = {
+        user_id: 1, // Mock user ID for now
+        sleep_hours: 4 + (data.sleep - 1) * 1.5,
+        stress_level: (5 - data.stress) * 2 + 1,
+        fatigue_level: (5 - data.energy) * 2 + 1,
+        muscle_soreness: (5 - data.soreness) * 2 + 1,
+        available_time: [15, 30, 45, 60, 90][data.timeAvailable - 1]
+      };
+
+      const response = await fetch("/api/readiness/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Backend connection failed. Falling back to local engine.");
+      }
+
+      const result = await response.json();
+      
+      setIsSubmitted(true);
+      if (onResult) {
+        onResult(result);
+      }
+      toast.success("Biological readiness synchronized!");
+    } catch (error) {
+      console.warn(error);
+      // Fallback to local engine if backend fails
+      const result = calculateReadiness(data);
+      setIsSubmitted(true);
+      if (onResult) {
+        onResult(result);
+      }
+      toast.success("Assessment complete (Local Engine)");
+    } finally {
+      setLoading(false);
     }
-    
-    toast.success("Readiness assessment complete!");
-    setLoading(false);
   };
+
 
   if (isSubmitted) {
     return (
