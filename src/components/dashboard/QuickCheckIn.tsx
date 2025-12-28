@@ -81,7 +81,7 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-background via-background to-primary/5 rounded-3xl p-8 animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden relative">
+    <div className="bg-gradient-to-br from-background via-background to-primary/5 rounded-3xl p-8 animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
       {/* Decorative background elements */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
