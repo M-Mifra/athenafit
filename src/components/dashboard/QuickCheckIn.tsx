@@ -42,7 +42,7 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/readiness/", {
+      const response = await fetch("/api/readiness/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
