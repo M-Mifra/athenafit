@@ -29,7 +29,7 @@ const recommendations = [
 
 const AdaptiveRecommendations = () => {
   return (
-    <section className="section-padding">
+    <section id="recommendations" className="section-padding">
       <div className="container">
         {/* Header */}
         <div className="max-w-2xl mb-16">
