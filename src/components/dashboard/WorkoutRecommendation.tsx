@@ -1,6 +1,7 @@
 import { Activity, MapPin, Clock, TrendingDown, AlertCircle, CheckCircle, Home, Sun } from "lucide-react";
 import { CombinedReadinessResponse, WorkoutConstraints, EnvironmentAdjustment } from "@/lib/api";
 import { Progress } from "@/components/ui/progress";
+import StrategyInsights from "./StrategyInsights";
 
 interface WorkoutRecommendationProps {
   result: CombinedReadinessResponse | null;
