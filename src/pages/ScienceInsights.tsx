@@ -39,43 +39,43 @@ const ScienceInsights = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
-              <ScienceCard 
-                icon={<BrainCircuit className="h-8 w-8" />}
-                title="Biological Synthesis"
-                description="Weighting sleep architecture (40%), autonomic stress (20%), and metabolic fatigue (40%) to determine baseline capacity."
-                color="primary"
-                points={[
-                  "Sleep quality as primary injury predictor",
-                  "CNS fatigue detection through energy metrics",
-                  "Peripheral recovery via soreness assessment"
-                ]}
-              />
-              
-              <ScienceCard 
-                icon={<Microscope className="h-8 w-8" />}
-                title="Environmental Load"
-                description="Processing PM2.5 concentration, heat index, and metabolic efficiency variables based on WHO health standards."
-                color="accent"
-                points={[
-                  "AQI-based intensity caps",
-                  "Thermal stress duration modifiers",
-                  "Hazardous condition lockdowns"
-                ]}
-              />
+              <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
+                <ScienceCard 
+                  icon={<BrainCircuit className="h-8 w-8" />}
+                  title="Personalization Logic"
+                  description="Dynamic volume scaling (DVS) adjusts intensity and duration based on your 24-hour biological delta."
+                  color="primary"
+                  points={[
+                    "Intensity capping (60-100% range)",
+                    "Duration optimization (15-120 min)",
+                    "CNS-aware volume adjustment"
+                  ]}
+                />
+                
+                <ScienceCard 
+                  icon={<Microscope className="h-8 w-8" />}
+                  title="Readiness Scoring"
+                  description="Multi-factor synthesis of sleep architecture, autonomic stress, and metabolic energy reserves."
+                  color="accent"
+                  points={[
+                    "40% Sleep Architecture weight",
+                    "20% Autonomic Stress (HRV-proxy)",
+                    "40% Metabolic Fatigue index"
+                  ]}
+                />
 
-              <ScienceCard 
-                icon={<BookOpen className="h-8 w-8" />}
-                title="Policy Constraints"
-                description="Hard-coded legal and safety constraints based on local ordinances, lockdowns, and major social events."
-                color="primary"
-                points={[
-                  "Automatic location re-routing",
-                  "Movement restriction compliance",
-                  "Crowd-avoidance safety logic"
-                ]}
-              />
-            </div>
+                <ScienceCard 
+                  icon={<BookOpen className="h-8 w-8" />}
+                  title="Safety Framework"
+                  description="External policy and environmental overrides that prioritize long-term health over immediate output."
+                  color="primary"
+                  points={[
+                    "AQI-triggered respiratory protection",
+                    "Heat-index duration dampening",
+                    "Policy-driven movement compliance"
+                  ]}
+                />
+              </div>
 
             <div className="mt-24 p-10 md:p-16 rounded-[2.5rem] bg-gradient-to-br from-muted/50 to-muted border border-border/50 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32" />
