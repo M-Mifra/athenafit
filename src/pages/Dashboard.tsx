@@ -159,43 +159,95 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <BiologicalCheckIn 
-                onDataChange={handleBiologicalChange}
-                data={bioData}
-                setData={setBioData}
-              />
-              
-              <EnvironmentInput 
-                onSubmit={handleEnvironmentSubmit}
-                loading={false}
-              />
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <BiologicalCheckIn 
+                  onDataChange={handleBiologicalChange}
+                  data={bioData}
+                  setData={setBioData}
+                />
+                
+                <EnvironmentInput 
+                  onSubmit={handleEnvironmentSubmit}
+                  loading={false}
+                />
 
-              <Button
-                onClick={handleGenerateRecommendation}
-                disabled={loading}
-                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-x hover:scale-[1.02] active:scale-95 transition-all rounded-xl"
-              >
-                {loading ? (
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                ) : (
-                  <>
-                    <Send className="h-5 w-5 mr-2" />
-                    Generate Combined Recommendation
-                  </>
+                <Button
+                  onClick={handleGenerateRecommendation}
+                  disabled={loading}
+                  className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-x hover:scale-[1.02] active:scale-95 transition-all rounded-xl shadow-lg shadow-primary/20"
+                >
+                  {loading ? (
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="h-5 w-5 mr-2" />
+                      Generate Combined Recommendation
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              <div className="space-y-6">
+                <WorkoutRecommendation result={result} />
+                
+                {!result && (
+                  <div className="editorial-card rounded-2xl p-8 bg-muted/30 border-dashed border-2 border-border flex flex-col items-center justify-center text-center">
+                    <Microscope className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                    <h3 className="font-serif text-lg text-muted-foreground">Awaiting Assessment</h3>
+                    <p className="text-sm text-muted-foreground max-w-xs mt-2">
+                      Enter your biological and environmental metrics to unlock science-based training insights.
+                    </p>
+                  </div>
                 )}
-              </Button>
+              </div>
             </div>
 
-            <div>
-              <WorkoutRecommendation result={result} />
+            <div className="mt-20 pt-10 border-t border-border">
+              <div className="text-center mb-12">
+                <h2 className="font-serif text-3xl mb-4">Science & Methodology</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Athenafit utilizes a multi-layered algorithm that synthesizes biometric data with real-time environmental and policy constraints.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <BrainCircuit className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-xl">Biological Readiness</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Our model weighs sleep quality, autonomic stress indicators, and perceived muscle soreness. Research shows that <span className="text-foreground font-medium">sleep debt</span> is the primary predictor of injury risk in high-performance athletes.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
+                    <Microscope className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-xl">Environmental Load</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    External stressors like <span className="text-foreground font-medium">PM2.5 concentration (AQI)</span> and heat index impact VO2 max and metabolic efficiency. We implement WHO-standard thresholds for hazardous conditions.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-xl">Policy Integration</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Local ordinances, lockdowns, and major events are processed as hard constraints to ensure legal and social safety, automatically adjusting your training location and intensity.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
+        </main>
+      </div>
+    );
+
 };
 
 export default Dashboard;
