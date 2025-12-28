@@ -30,6 +30,28 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
     { label: "HRV Score", value: "65ms", subtext: "+8% from avg" },
     { label: "Strain Load", value: "Optimal", subtext: "Ready for intensity" },
   ];
+
+  return (
+    <section className="section-padding subtle-gradient">
+      <div className="container">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Content */}
+          <div className="order-2 lg:order-1">
+            <p className="text-sm text-muted-foreground tracking-widest uppercase mb-4">
+              Readiness Analysis
+            </p>
+            <h2 className="font-serif text-headline mb-6">
+              Your body speaks.
+              <br />
+              <span className="italic">We help you listen.</span>
+            </h2>
+            <p className="text-body-lg text-muted-foreground mb-8">
+              Every morning, a simple check-in captures your sleep quality, stress levels, muscle soreness, and available time. Our AI synthesizes these signals into a single, actionable readiness score.
+            </p>
+
+            {/* Metrics */}
+            <div className="grid grid-cols-2 gap-6">
+              {metrics.map((metric, index) => (
                 <div key={metric.label} className="p-5 editorial-card rounded-lg">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
                     {metric.label}
@@ -75,7 +97,7 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
                 <span className="font-serif text-6xl md:text-7xl">{progress}</span>
                 <span className="text-sm text-muted-foreground mt-2">Readiness Score</span>
                 <span className="text-xs text-primary mt-4 px-3 py-1 bg-primary/10 rounded-full">
-                  Ready to train
+                  {assessment?.decision || "Ready to train"}
                 </span>
               </div>
             </div>
