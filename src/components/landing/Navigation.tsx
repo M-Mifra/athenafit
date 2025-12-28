@@ -30,10 +30,10 @@ const Navigation = () => {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => window.location.href = "/auth"}>
             Sign in
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={() => window.location.href = "/auth"}>
             Get Started
             <ArrowRight className="h-3.5 w-3.5" />
           </Button>
