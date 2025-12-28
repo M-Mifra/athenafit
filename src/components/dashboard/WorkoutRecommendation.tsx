@@ -204,6 +204,11 @@ const WorkoutRecommendation = ({ result }: WorkoutRecommendationProps) => {
         readinessExplanation={result.readiness_explanation}
         environmentAdjustments={result.environment_adjustments}
       />
+
+      <StrategyInsights 
+        decision={result.final_decision} 
+        score={result.readiness_score} 
+      />
     </div>
   );
 };
