@@ -1,45 +1,35 @@
 import { useEffect, useState } from "react";
 
-const ReadinessVisual = () => {
+interface ReadinessVisualProps {
+  assessment?: any;
+}
+
+const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
   const [progress, setProgress] = useState(0);
-  const targetValue = 78;
+  const targetValue = assessment?.readiness_score || 78;
 
   useEffect(() => {
+    setProgress(0);
     const timer = setTimeout(() => {
       setProgress(targetValue);
     }, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [targetValue]);
 
   const circumference = 2 * Math.PI * 120;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-  return (
-    <section className="section-padding subtle-gradient">
-      <div className="container">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Content */}
-          <div className="order-2 lg:order-1">
-            <p className="text-sm text-muted-foreground tracking-widest uppercase mb-4">
-              Readiness Analysis
-            </p>
-            <h2 className="font-serif text-headline mb-6">
-              Your body speaks.
-              <br />
-              <span className="italic">We help you listen.</span>
-            </h2>
-            <p className="text-body-lg text-muted-foreground mb-8">
-              Every morning, a simple check-in captures your sleep quality, stress levels, muscle soreness, and available time. Our AI synthesizes these signals into a single, actionable readiness score.
-            </p>
-
-            {/* Metrics */}
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { label: "Sleep Quality", value: "7.5h", subtext: "Deep sleep: 1.8h" },
-                { label: "Recovery", value: "82%", subtext: "Above baseline" },
-                { label: "HRV Score", value: "65ms", subtext: "+8% from avg" },
-                { label: "Strain Load", value: "Optimal", subtext: "Ready for intensity" },
-              ].map((metric, index) => (
+  const metrics = assessment ? [
+    { label: "Sleep Hours", value: `${assessment.sleep_hours.toFixed(1)}h`, subtext: "Logged today" },
+    { label: "Recovery", value: `${assessment.readiness_score}%`, subtext: assessment.decision },
+    { label: "Stress", value: assessment.stress_level > 7 ? "High" : assessment.stress_level > 4 ? "Moderate" : "Low", subtext: "Reported" },
+    { label: "Capacity", value: `${assessment.available_time}m`, subtext: "Available today" },
+  ] : [
+    { label: "Sleep Quality", value: "7.5h", subtext: "Deep sleep: 1.8h" },
+    { label: "Recovery", value: "82%", subtext: "Above baseline" },
+    { label: "HRV Score", value: "65ms", subtext: "+8% from avg" },
+    { label: "Strain Load", value: "Optimal", subtext: "Ready for intensity" },
+  ];
                 <div key={metric.label} className="p-5 editorial-card rounded-lg">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
                     {metric.label}
