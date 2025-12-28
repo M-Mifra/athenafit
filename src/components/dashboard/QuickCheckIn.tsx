@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Moon, Battery, Brain, Clock, Zap, ChevronRight, Check } from "lucide-react";
+import { Moon, Battery, Brain, Clock, Zap, ChevronRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CheckInSlider from "./CheckInSlider";
+import { toast } from "sonner";
 
 interface CheckInData {
   sleep: number;
@@ -11,9 +12,14 @@ interface CheckInData {
   timeAvailable: number;
 }
 
-const QuickCheckIn = () => {
+interface QuickCheckInProps {
+  onResult?: (result: any) => void;
+}
+
+const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<CheckInData>({
     sleep: 4,
     energy: 3,
@@ -22,11 +28,47 @@ const QuickCheckIn = () => {
     timeAvailable: 3,
   });
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsExpanded(false);
-    }, 1500);
+  const handleSubmit = async () => {
+    setLoading(true);
+    
+    // Map frontend 1-5 to backend expected values
+    const payload = {
+      user_id: 1, // Mock user ID
+      sleep_hours: 4 + (data.sleep - 1) * 1.5,
+      stress_level: (5 - data.stress) * 2 + 1,
+      fatigue_level: (5 - data.energy) * 2 + 1,
+      muscle_soreness: (5 - data.soreness) * 2 + 1,
+      available_time: [15, 30, 45, 60, 90][data.timeAvailable - 1]
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/readiness/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch assessment");
+
+      const result = await response.json();
+      setIsSubmitted(true);
+      
+      if (onResult) {
+        onResult(result);
+      }
+
+      setTimeout(() => {
+        setIsExpanded(false);
+        setIsSubmitted(false);
+      }, 3000);
+      
+      toast.success("Readiness assessment complete!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not reach the analysis engine. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (isSubmitted) {
