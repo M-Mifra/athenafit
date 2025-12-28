@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Moon, Battery, Brain, Clock, Zap, ChevronRight, Check, Loader2 } from "lucide-react";
+import { Moon, Battery, Brain, Clock, Zap, ChevronRight, Check, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CheckInSlider from "./CheckInSlider";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface CheckInData {
   sleep: number;
@@ -17,7 +18,7 @@ interface QuickCheckInProps {
 }
 
 const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Always expanded when in dialog
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<CheckInData>({
@@ -31,9 +32,8 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
   const handleSubmit = async () => {
     setLoading(true);
     
-    // Map frontend 1-5 to backend expected values
     const payload = {
-      user_id: 1, // Mock user ID
+      user_id: 1,
       sleep_hours: 4 + (data.sleep - 1) * 1.5,
       stress_level: (5 - data.stress) * 2 + 1,
       fatigue_level: (5 - data.energy) * 2 + 1,
@@ -56,11 +56,6 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
       if (onResult) {
         onResult(result);
       }
-
-      setTimeout(() => {
-        setIsExpanded(false);
-        setIsSubmitted(false);
-      }, 3000);
       
       toast.success("Readiness assessment complete!");
     } catch (error) {
@@ -73,107 +68,96 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
 
   if (isSubmitted) {
     return (
-      <div className="glass-card rounded-2xl p-8 text-center slide-up">
-        <div className="w-16 h-16 mx-auto rounded-full bg-success/20 flex items-center justify-center mb-4">
-          <Check className="h-8 w-8 text-success" />
+      <div className="bg-gradient-to-br from-primary/10 via-background to-accent/10 rounded-3xl p-12 text-center animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl">
+        <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-success to-primary flex items-center justify-center mb-6 shadow-[0_0_40px_-10px_rgba(var(--success),0.5)]">
+          <Check className="h-10 w-10 text-white" />
         </div>
-        <h3 className="font-display font-bold text-xl">Check-in Complete!</h3>
-        <p className="text-sm text-muted-foreground mt-2">
-          Your personalized plan is being generated...
+        <h3 className="font-serif text-3xl font-bold mb-4">Assessment Complete</h3>
+        <p className="text-muted-foreground max-w-xs mx-auto text-lg">
+          Your biological readiness has been analyzed. Generating your optimal training path...
         </p>
       </div>
     );
   }
 
-  if (!isExpanded) {
-    return (
-      <button
-        onClick={() => setIsExpanded(true)}
-        className="w-full glass-card-hover rounded-2xl p-6 text-left group"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-info text-primary-foreground">
-              <Zap className="h-6 w-6" />
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-lg">Daily Check-in</h3>
-              <p className="text-sm text-muted-foreground">
-                Quick 30-second readiness assessment
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
-        </div>
-      </button>
-    );
-  }
-
   return (
-    <div className="glass-card rounded-2xl p-6 slide-up">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-info text-primary-foreground">
-          <Zap className="h-5 w-5" />
-        </div>
-        <div>
-          <h3 className="font-display font-bold text-lg">How are you feeling today?</h3>
-          <p className="text-sm text-muted-foreground">Rate each factor from 1-5</p>
-        </div>
-      </div>
+    <div className="bg-gradient-to-br from-background via-background to-primary/5 rounded-3xl p-8 animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden relative">
+      {/* Decorative background elements */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
 
-      <div className="space-y-4">
-        <CheckInSlider
-          icon={Moon}
-          label="Sleep Quality"
-          description="How well did you sleep last night?"
-          value={data.sleep}
-          onChange={(v) => setData({ ...data, sleep: v })}
-        />
-        <CheckInSlider
-          icon={Battery}
-          label="Energy Level"
-          description="How energized do you feel right now?"
-          value={data.energy}
-          onChange={(v) => setData({ ...data, energy: v })}
-        />
-        <CheckInSlider
-          icon={Brain}
-          label="Mental Stress"
-          description="How stressed or overwhelmed are you?"
-          value={data.stress}
-          onChange={(v) => setData({ ...data, stress: v })}
-          labels={["Very High", "High", "Moderate", "Low", "None"]}
-        />
-        <CheckInSlider
-          icon={Zap}
-          label="Muscle Soreness"
-          description="Any muscle soreness or fatigue?"
-          value={data.soreness}
-          onChange={(v) => setData({ ...data, soreness: v })}
-          labels={["Severe", "High", "Moderate", "Mild", "None"]}
-        />
-        <CheckInSlider
-          icon={Clock}
-          label="Time Available"
-          description="How much time do you have today?"
-          value={data.timeAvailable}
-          onChange={(v) => setData({ ...data, timeAvailable: v })}
-          labels={["15min", "30min", "45min", "60min", "90min+"]}
-        />
-      </div>
+      <div className="relative">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/20">
+            <Sparkles className="h-6 w-6 animate-pulse" />
+          </div>
+          <div>
+            <h3 className="font-serif text-2xl font-bold tracking-tight">Daily Biological Check-in</h3>
+            <p className="text-sm text-muted-foreground font-medium">Calibrate your training to your current state</p>
+          </div>
+        </div>
 
-      <div className="flex gap-3 mt-6">
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => setIsExpanded(false)}
-        >
-          Cancel
-        </Button>
-        <Button variant="hero" className="flex-1" onClick={handleSubmit}>
-          Get My Plan
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <div className="space-y-6">
+          <CheckInSlider
+            icon={Moon}
+            label="Sleep Quality"
+            description="Restoration level from last night"
+            value={data.sleep}
+            onChange={(v) => setData({ ...data, sleep: v })}
+          />
+          <CheckInSlider
+            icon={Battery}
+            label="Energy Level"
+            description="Available metabolic capacity"
+            value={data.energy}
+            onChange={(v) => setData({ ...data, energy: v })}
+          />
+          <CheckInSlider
+            icon={Brain}
+            label="Nervous System Stress"
+            description="Cognitive and systemic load"
+            value={data.stress}
+            onChange={(v) => setData({ ...data, stress: v })}
+            labels={["Extreme", "High", "Moderate", "Low", "None"]}
+          />
+          <CheckInSlider
+            icon={Zap}
+            label="Peripheral Fatigue"
+            description="Muscle soreness and tension"
+            value={data.soreness}
+            onChange={(v) => setData({ ...data, soreness: v })}
+            labels={["Severe", "High", "Moderate", "Mild", "None"]}
+          />
+          <CheckInSlider
+            icon={Clock}
+            label="Temporal Constraint"
+            description="Duration available for today's session"
+            value={data.timeAvailable}
+            onChange={(v) => setData({ ...data, timeAvailable: v })}
+            labels={["15m", "30m", "45m", "60m", "90m+"]}
+          />
+        </div>
+
+        <div className="mt-10">
+          <Button 
+            variant="hero" 
+            className="w-full h-14 text-lg font-bold shadow-xl shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:scale-[1.02] transition-transform"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-6 w-6 animate-spin" />
+            ) : (
+              <>
+                Generate Personalized Strategy
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </>
+            )}
+          </Button>
+          <p className="text-[10px] text-center text-muted-foreground mt-4 uppercase tracking-widest font-bold">
+            Powered by AthenaFit Intelligence Engine
+          </p>
+        </div>
       </div>
     </div>
   );
