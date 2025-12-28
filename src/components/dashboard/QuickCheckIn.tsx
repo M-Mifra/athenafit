@@ -3,7 +3,7 @@ import { Moon, Battery, Brain, Clock, Zap, ChevronRight, Check, Loader2, Sparkle
 import { Button } from "@/components/ui/button";
 import CheckInSlider from "./CheckInSlider";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { calculateReadiness, ReadinessResult } from "@/lib/readinessEngine";
 
 interface CheckInData {
   sleep: number;
@@ -14,11 +14,10 @@ interface CheckInData {
 }
 
 interface QuickCheckInProps {
-  onResult?: (result: any) => void;
+  onResult?: (result: ReadinessResult) => void;
 }
 
 const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
-  const [isExpanded, setIsExpanded] = useState(true); // Always expanded when in dialog
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<CheckInData>({
@@ -32,38 +31,18 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
   const handleSubmit = async () => {
     setLoading(true);
     
-    const payload = {
-      user_id: 1,
-      sleep_hours: 4 + (data.sleep - 1) * 1.5,
-      stress_level: (5 - data.stress) * 2 + 1,
-      fatigue_level: (5 - data.energy) * 2 + 1,
-      muscle_soreness: (5 - data.soreness) * 2 + 1,
-      available_time: [15, 30, 45, 60, 90][data.timeAvailable - 1]
-    };
-
-    try {
-      const response = await fetch("/api/readiness/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch assessment");
-
-      const result = await response.json();
-      setIsSubmitted(true);
-      
-      if (onResult) {
-        onResult(result);
-      }
-      
-      toast.success("Readiness assessment complete!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Could not reach the analysis engine. Please try again.");
-    } finally {
-      setLoading(false);
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    
+    const result = calculateReadiness(data);
+    
+    setIsSubmitted(true);
+    
+    if (onResult) {
+      onResult(result);
     }
+    
+    toast.success("Readiness assessment complete!");
+    setLoading(false);
   };
 
   if (isSubmitted) {
@@ -82,7 +61,6 @@ const QuickCheckIn = ({ onResult }: QuickCheckInProps) => {
 
   return (
     <div className="bg-gradient-to-br from-background via-background to-primary/5 rounded-3xl p-8 animate-fade-up border border-white/10 shadow-2xl backdrop-blur-xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
-      {/* Decorative background elements */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
 
