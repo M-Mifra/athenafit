@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ArrowDown } from "lucide-react";
 
 interface ReadinessVisualProps {
   assessment?: any;
@@ -32,7 +33,7 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
   ];
 
   return (
-    <section id="assessment" className="section-padding subtle-gradient relative">
+    <section id="assessment" className="section-padding subtle-gradient relative min-h-[80vh] flex flex-col justify-center">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Content */}
@@ -51,8 +52,8 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
 
             {/* Metrics */}
             <div className="grid grid-cols-2 gap-6">
-              {metrics.map((metric, index) => (
-                <div key={metric.label} className="p-5 editorial-card rounded-lg">
+              {metrics.map((metric) => (
+                <div key={metric.label} className="p-5 editorial-card rounded-lg group hover:bg-white/5 transition-colors cursor-default">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
                     {metric.label}
                   </p>
@@ -103,6 +104,12 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* Scroll indicator - specifically below the "Temporal Constraint" (Capacity) card area */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity" onClick={() => document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' })}>
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">See Adaptation</span>
+        <ArrowDown className="h-4 w-4 text-muted-foreground" />
       </div>
     </section>
   );
