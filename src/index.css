@@ -234,12 +234,25 @@
     animation: lineGrow 1.2s ease-out forwards;
   }
 
-  @keyframes lineGrow {
-    from {
-      transform: scaleX(0);
+    @keyframes lineGrow {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
     }
-    to {
-      transform: scaleX(1);
+
+    @keyframes gradient-x {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
     }
-  }
+
+    .animate-gradient-x {
+      animation: gradient-x 3s ease infinite;
+    }
 }
