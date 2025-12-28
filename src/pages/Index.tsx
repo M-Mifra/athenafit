@@ -35,7 +35,10 @@ const Index = () => {
         <DialogContent className="sm:max-w-[500px] p-0 bg-transparent border-none">
           <QuickCheckIn onResult={(res) => {
             setAssessmentResult(res);
-            setTimeout(() => setIsCheckInOpen(false), 2000);
+            setTimeout(() => {
+              setIsCheckInOpen(false);
+              document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
           }} />
         </DialogContent>
       </Dialog>
