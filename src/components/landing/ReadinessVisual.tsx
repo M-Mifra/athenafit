@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowDown } from "lucide-react";
+import { ReadinessResult } from "@/lib/readinessEngine";
 
 interface ReadinessVisualProps {
-  assessment?: any;
+  assessment?: ReadinessResult | null;
 }
 
 const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
@@ -20,9 +21,18 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
   const circumference = 2 * Math.PI * 120;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
+  const getDecisionLabel = (decision: string) => {
+    switch (decision) {
+      case "TRAIN": return "Ready to Train";
+      case "ACTIVE_RECOVERY": return "Active Recovery";
+      case "REST": return "Rest Day";
+      default: return "Ready to train";
+    }
+  };
+
   const metrics = assessment ? [
     { label: "Sleep Hours", value: `${assessment.sleep_hours.toFixed(1)}h`, subtext: "Logged today" },
-    { label: "Recovery", value: `${assessment.readiness_score}%`, subtext: assessment.decision },
+    { label: "Recovery", value: `${assessment.readiness_score}%`, subtext: getDecisionLabel(assessment.decision) },
     { label: "Stress", value: assessment.stress_level > 7 ? "High" : assessment.stress_level > 4 ? "Moderate" : "Low", subtext: "Reported" },
     { label: "Capacity", value: `${assessment.available_time}m`, subtext: "Available today" },
   ] : [
@@ -36,7 +46,6 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
     <section id="assessment" className="section-padding subtle-gradient relative min-h-[80vh] flex flex-col justify-center">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Content */}
           <div className="order-2 lg:order-1">
             <p className="text-sm text-muted-foreground tracking-widest uppercase mb-4">
               Readiness Analysis
@@ -50,7 +59,6 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
               Every morning, a simple check-in captures your sleep quality, stress levels, muscle soreness, and available time. Our AI synthesizes these signals into a single, actionable readiness score.
             </p>
 
-            {/* Metrics */}
             <div className="grid grid-cols-2 gap-6">
               {metrics.map((metric) => (
                 <div key={metric.label} className="p-5 editorial-card rounded-lg group hover:bg-white/5 transition-colors cursor-default">
@@ -64,12 +72,9 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
             </div>
           </div>
 
-          {/* Visual */}
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative">
-              {/* Outer ring */}
               <svg className="w-72 h-72 md:w-80 md:h-80 -rotate-90" viewBox="0 0 280 280">
-                {/* Background track */}
                 <circle
                   cx="140"
                   cy="140"
@@ -78,7 +83,6 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
                   stroke="hsl(var(--muted))"
                   strokeWidth="1"
                 />
-                {/* Progress ring */}
                 <circle
                   cx="140"
                   cy="140"
@@ -89,16 +93,15 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={strokeDashoffset}
-                  className="transition-all duration-[2000ms] ease-out"
+                  style={{ transition: "stroke-dashoffset 2000ms ease-out" }}
                 />
               </svg>
 
-              {/* Center content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-serif text-6xl md:text-7xl">{progress}</span>
                 <span className="text-sm text-muted-foreground mt-2">Readiness Score</span>
                 <span className="text-xs text-primary mt-4 px-3 py-1 bg-primary/10 rounded-full">
-                  {assessment?.decision || "Ready to train"}
+                  {assessment ? getDecisionLabel(assessment.decision) : "Ready to train"}
                 </span>
               </div>
             </div>
@@ -106,8 +109,10 @@ const ReadinessVisual = ({ assessment }: ReadinessVisualProps) => {
         </div>
       </div>
       
-      {/* Scroll indicator - specifically below the "Temporal Constraint" (Capacity) card area */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity" onClick={() => document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' })}>
+      <div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity" 
+        onClick={() => document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' })}
+      >
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground">See Adaptation</span>
         <ArrowDown className="h-4 w-4 text-muted-foreground" />
       </div>
