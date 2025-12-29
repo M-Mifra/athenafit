@@ -37,20 +37,16 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
             ATHENAFIT analyzes your daily readiness to recommend the safest, most effective action—training, recovery, or rest—preventing burnout before it begins.
           </p>
   
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-3">
-                  <Button 
-                    size="xl" 
-                    onClick={() => navigate("/onboarding")}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_hsl(var(--primary))] transition-all duration-500 scale-105 hover:scale-110 font-bold"
-                  >
-                    Begin Your Journey
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-
-              <Button variant="outline" size="xl" onClick={onStart}>
-                Quick Check-in
-              </Button>
-            </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up-delay-3">
+                    <Button 
+                      size="xl" 
+                      onClick={() => navigate("/onboarding")}
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_hsl(var(--primary))] transition-all duration-500 scale-105 hover:scale-110 font-bold"
+                    >
+                      Begin Your Journey
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+              </div>
 
 
           <p className="text-xs text-muted-foreground mt-12 animate-fade-up-delay-4">

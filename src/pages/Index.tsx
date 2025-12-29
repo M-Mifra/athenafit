@@ -16,34 +16,22 @@ const Index = () => {
   const [assessmentResult, setAssessmentResult] = useState<ReadinessResult | null>(null);
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-        <main>
-          <HeroSection onStart={() => setIsCheckInOpen(true)} />
-          <ReadinessVisual assessment={assessmentResult} />
-          <TemporalAdaptability />
-          <AdaptiveRecommendations assessment={assessmentResult} />
-          <PopulationInsights />
-          <ScienceSection />
-          <CTASection />
-        </main>
-
-      <Footer />
-
-      <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
-        <DialogContent className="sm:max-w-[500px] p-0 bg-transparent border-none">
-          <QuickCheckIn onResult={(res) => {
-            setAssessmentResult(res);
-            setTimeout(() => {
-              setIsCheckInOpen(false);
-              document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
-          }} />
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+          <main>
+            <HeroSection />
+            <ReadinessVisual assessment={assessmentResult} />
+            <TemporalAdaptability />
+            <AdaptiveRecommendations assessment={assessmentResult} />
+            <PopulationInsights />
+            <ScienceSection />
+            <CTASection />
+          </main>
+  
+        <Footer />
+      </div>
+    );
 };
 
 export default Index;
