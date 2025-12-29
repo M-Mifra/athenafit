@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Navigation from "@/components/landing/Navigation";
 import HeroSection from "@/components/landing/HeroSection";
 import ReadinessVisual from "@/components/landing/ReadinessVisual";
@@ -12,22 +12,22 @@ import QuickCheckIn from "@/components/dashboard/QuickCheckIn";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ReadinessResult } from "@/lib/readinessEngine";
 
-const Landing = () => {
+const Index = () => {
   const [assessmentResult, setAssessmentResult] = useState<ReadinessResult | null>(null);
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background">
       <Navigation />
-      <main>
-        <HeroSection onStart={() => setIsCheckInOpen(true)} />
-        <ReadinessVisual assessment={assessmentResult} />
-        <TemporalAdaptability />
-        <AdaptiveRecommendations assessment={assessmentResult} />
-        <PopulationInsights />
-        <ScienceSection />
-        <CTASection />
-      </main>
+        <main>
+          <HeroSection onStart={() => setIsCheckInOpen(true)} />
+          <ReadinessVisual assessment={assessmentResult} />
+          <TemporalAdaptability />
+          <AdaptiveRecommendations assessment={assessmentResult} />
+          <PopulationInsights />
+          <ScienceSection />
+          <CTASection />
+        </main>
 
       <Footer />
 
@@ -46,4 +46,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default Index;
