@@ -291,3 +291,4 @@ export function getCombinedReadiness(
     environment_severity: envResult.severity,
   };
 }
+

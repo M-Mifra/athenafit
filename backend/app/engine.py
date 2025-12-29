@@ -46,3 +46,4 @@ def calculate_readiness(
             reasons["overall"] = "Body is well-rested and ready for a standard session."
 
     return readiness_score, decision, reasons
+

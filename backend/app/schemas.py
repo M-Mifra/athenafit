@@ -106,3 +106,4 @@ class CombinedReadinessResponse(BaseModel):
     environment_adjustments: List[EnvironmentAdjustment]
     constraints: WorkoutConstraints
     environment_severity: str
+

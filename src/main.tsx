@@ -3,12 +3,14 @@ import App from "./App.tsx";
 import "./index.css";
 
 if (typeof window !== "undefined") {
-  const sendToParent = (data: any) => {
+  const sendToParent = (data: unknown) => {
     try {
       if (window.parent && window.parent !== window) {
         window.parent.postMessage(data, "*");
       }
-    } catch {}
+    } catch {
+      // Ignore errors
+    }
   };
 
   window.addEventListener("error", (event) => {
@@ -28,12 +30,12 @@ if (typeof window !== "undefined") {
   });
 
   window.addEventListener("unhandledrejection", (event) => {
-    const reason: any = event.reason;
+    const reason = event.reason;
     const message =
-      typeof reason === "object" && reason?.message
+      reason && typeof reason === "object" && "message" in reason
         ? String(reason.message)
         : String(reason);
-    const stack = typeof reason === "object" ? reason?.stack : undefined;
+    const stack = reason && typeof reason === "object" && "stack" in reason ? String(reason.stack) : undefined;
 
     // Mirror to parent iframe as well
     sendToParent({
