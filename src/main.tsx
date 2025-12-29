@@ -54,4 +54,3 @@ if (typeof window !== "undefined") {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
-
